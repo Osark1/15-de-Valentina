@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin · XV Angie Valentina</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Dancing+Script:wght@600;700&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --midnight: #070b18; --deep: #0d1426; --sapphire: #1a237e;
+      --royal: #1565c0; --sky: #42a5f5; --gold: #c9a96e;
+      --gold-light: #e8d5a3; --pearl: #f0f4ff;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--midnight); color: var(--pearl); font-family: 'Montserrat', sans-serif; font-weight: 300; min-height: 100vh; }
+
+    /* TOP BAR */
+    header {
+      padding: 20px 32px; display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(201,169,110,0.15);
+      background: var(--deep);
+    }
+    .header-logo { font-family: 'Dancing Script', cursive; font-size: 1.8rem; color: var(--gold-light); }
+    .header-sub { font-size: 0.65rem; letter-spacing: 4px; text-transform: uppercase; opacity: 0.4; margin-top: 2px; }
+    .back-btn {
+      padding: 10px 24px; border: 1px solid rgba(201,169,110,0.3); background: transparent;
+      color: var(--gold); font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase;
+      cursor: pointer; text-decoration: none; transition: all 0.3s;
+    }
+    .back-btn:hover { background: rgba(201,169,110,0.1); }
+
+    /* TABS */
+    .tabs {
+      display: flex; gap: 2px; padding: 24px 32px 0;
+      border-bottom: 1px solid rgba(201,169,110,0.12);
+    }
+    .tab-btn {
+      padding: 12px 28px; background: transparent; border: none; border-bottom: 2px solid transparent;
+      color: rgba(240,244,255,0.4); font-family: 'Montserrat', sans-serif; font-size: 0.7rem;
+      letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all 0.3s;
+    }
+    .tab-btn:hover { color: var(--pearl); }
+    .tab-btn.active { color: var(--gold-light); border-bottom-color: var(--gold); }
+
+    /* CONTENT */
+    .tab-content { display: none; padding: 40px 32px; }
+    .tab-content.active { display: block; }
+
+    /* STATS CARDS */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-bottom: 40px; }
+    .stat-card {
+      border: 1px solid rgba(201,169,110,0.2); padding: 28px 24px;
+      background: rgba(201,169,110,0.03); text-align: center;
+    }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif; font-size: 3rem;
+      color: var(--gold-light); line-height: 1;
+    }
+    .stat-label { font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase; opacity: 0.4; margin-top: 8px; }
+
+    /* TABLE */
+    .table-controls {
+      display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; align-items: center;
+    }
+    .search-input {
+      padding: 10px 16px; background: rgba(201,169,110,0.05);
+      border: 1px solid rgba(201,169,110,0.2); color: var(--pearl);
+      font-family: 'Montserrat', sans-serif; font-size: 0.8rem;
+      outline: none; flex: 1; min-width: 220px;
+    }
+    .search-input:focus { border-color: var(--gold); }
+    .btn {
+      padding: 10px 22px; border: 1px solid rgba(201,169,110,0.3);
+      background: transparent; color: var(--gold); font-size: 0.65rem;
+      letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all 0.3s;
+      white-space: nowrap;
+    }
+    .btn:hover { background: rgba(201,169,110,0.1); }
+    .btn-danger { border-color: rgba(239,83,80,0.3); color: #ef5350; }
+    .btn-danger:hover { background: rgba(239,83,80,0.1); }
+    .btn-success { border-color: rgba(102,187,106,0.4); color: #66bb6a; }
+    .btn-success:hover { background: rgba(102,187,106,0.1); }
+
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { border-bottom: 1px solid rgba(201,169,110,0.3); }
+    th { font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); padding: 12px 16px; text-align: left; font-weight: 400; }
+    td { padding: 14px 16px; font-size: 0.8rem; border-bottom: 1px solid rgba(240,244,255,0.05); vertical-align: middle; }
+    tr:hover td { background: rgba(201,169,110,0.03); }
+    .badge {
+      display: inline-block; padding: 3px 10px; font-size: 0.6rem;
+      letter-spacing: 2px; text-transform: uppercase;
+    }
+    .badge-yes { border: 1px solid rgba(102,187,106,0.4); color: #66bb6a; background: rgba(102,187,106,0.08); }
+    .badge-maybe { border: 1px solid rgba(255,183,77,0.4); color: #ffb74d; background: rgba(255,183,77,0.08); }
+    .badge-no { border: 1px solid rgba(239,83,80,0.4); color: #ef5350; background: rgba(239,83,80,0.08); }
+
+    /* INVITATION GENERATOR */
+    .inv-form { max-width: 600px; }
+    .inv-form .form-group { margin-bottom: 24px; }
+    .inv-form label { display: block; font-size: 0.62rem; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .inv-form input, .inv-form select, .inv-form textarea {
+      width: 100%; background: rgba(201,169,110,0.04); border: 1px solid rgba(201,169,110,0.2);
+      color: var(--pearl); font-family: 'Montserrat', sans-serif; font-size: 0.85rem;
+      padding: 12px 16px; outline: none; transition: border-color 0.3s;
+    }
+    .inv-form input:focus, .inv-form select:focus, .inv-form textarea:focus { border-color: var(--gold); }
+    .inv-form textarea { min-height: 80px; resize: vertical; }
+    .inv-form select option { background: var(--deep); }
+
+    /* INVITATION PREVIEW */
+    #inv-preview {
+      border: 1px solid rgba(201,169,110,0.3);
+      background: linear-gradient(135deg, #0a0e1a 0%, #0d1a3a 50%, #0a0e1a 100%);
+      padding: 60px 50px; text-align: center; margin-top: 40px; max-width: 700px;
+      position: relative; overflow: hidden;
+    }
+    #inv-preview::before, #inv-preview::after {
+      content: ''; position: absolute; width: 80px; height: 80px;
+    }
+    #inv-preview::before { top: 0; left: 0; border-top: 2px solid var(--gold); border-left: 2px solid var(--gold); }
+    #inv-preview::after { bottom: 0; right: 0; border-bottom: 2px solid var(--gold); border-right: 2px solid var(--gold); }
+    .inv-eyebrow { font-size: 0.6rem; letter-spacing: 8px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .inv-dear { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-style: italic; color: var(--pearl); opacity: 0.7; margin-bottom: 4px; }
+    .inv-guest-name { font-family: 'Dancing Script', cursive; font-size: 2.8rem; color: var(--gold-light); margin: 8px 0; }
+    .inv-divider { display: flex; align-items: center; gap: 12px; justify-content: center; margin: 20px 0; }
+    .inv-divider span { height: 1px; width: 50px; background: var(--gold); }
+    .inv-body { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; color: var(--pearl); opacity: 0.85; line-height: 1.9; margin-bottom: 24px; }
+    .inv-details { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin: 28px 0; }
+    .inv-detail-item { text-align: center; }
+    .inv-detail-label { font-size: 0.55rem; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); opacity: 0.7; }
+    .inv-detail-val { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--pearl); margin-top: 4px; }
+    .inv-sig { font-family: 'Dancing Script', cursive; font-size: 2rem; color: var(--gold-light); margin-top: 32px; }
+    .inv-footer { font-size: 0.6rem; letter-spacing: 4px; opacity: 0.3; text-transform: uppercase; margin-top: 20px; }
+    .inv-url { font-size: 0.7rem; color: var(--sky); opacity: 0.6; margin-top: 8px; }
+
+    /* COPY TEXTAREA */
+    #inv-text-output {
+      width: 100%; min-height: 200px; background: rgba(201,169,110,0.04);
+      border: 1px solid rgba(201,169,110,0.2); color: var(--pearl);
+      font-family: 'Montserrat', sans-serif; font-size: 0.78rem;
+      padding: 16px; outline: none; margin-top: 20px; resize: vertical; line-height: 1.8;
+    }
+
+    /* TOAST */
+    #toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 5000;
+      background: var(--deep); border: 1px solid var(--gold);
+      color: var(--pearl); padding: 14px 24px; font-size: 0.78rem;
+      transform: translateY(80px); opacity: 0; transition: all 0.4s;
+    }
+    #toast.show { transform: translateY(0); opacity: 1; }
+
+    /* EMPTY STATE */
+    .empty-state { text-align: center; padding: 80px 20px; opacity: 0.3; }
+    .empty-state p { font-size: 0.8rem; letter-spacing: 2px; margin-top: 12px; }
+    .empty-icon { font-size: 3rem; }
+
+    @media(max-width:600px) {
+      .tabs { padding: 16px 16px 0; overflow-x: auto; }
+      .tab-content { padding: 24px 16px; }
+      th, td { padding: 10px 8px; font-size: 0.72rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="header-logo">Admin · XV Años</div>
+    <div class="header-sub">Panel de gestión · Angie Valentina</div>
+  </div>
+  <a href="../index.html" class="back-btn">← Ver invitación</a>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('dashboard')">Dashboard</button>
+  <button class="tab-btn" onclick="switchTab('guests')">Invitados</button>
+  <button class="tab-btn" onclick="switchTab('generator')">Generar Invitación</button>
+  <button class="tab-btn" onclick="switchTab('export')">Exportar</button>
+</div>
+
+<!-- TAB: DASHBOARD -->
+<div id="tab-dashboard" class="tab-content active">
+  <div class="stats-grid" id="stats-grid"></div>
+  <div id="recent-section">
+    <p style="font-size:0.62rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:16px;">Confirmaciones recientes</p>
+    <table>
+      <thead><tr>
+        <th>Nombre</th><th>Email</th><th>Personas</th><th>Estado</th><th>Fecha</th>
+      </tr></thead>
+      <tbody id="recent-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB: GUESTS -->
+<div id="tab-guests" class="tab-content">
+  <div class="table-controls">
+    <input class="search-input" type="text" id="search-input" placeholder="Buscar por nombre, email..." oninput="filterGuests()">
+    <button class="btn btn-danger" onclick="clearAllGuests()">🗑 Borrar todos</button>
+    <button class="btn btn-success" onclick="exportCSV()">⬇ Exportar CSV</button>
+  </div>
+  <table>
+    <thead><tr>
+      <th>Nombre</th><th>Teléfono</th><th>Email</th><th>Personas</th><th>Estado</th><th>Mensaje</th><th>Acciones</th>
+    </tr></thead>
+    <tbody id="guests-body"></tbody>
+  </table>
+  <div id="no-guests" class="empty-state" style="display:none;">
+    <div class="empty-icon">📋</div>
+    <p>Sin invitados registrados aún</p>
+  </div>
+</div>
+
+<!-- TAB: INVITATION GENERATOR -->
+<div id="tab-generator" class="tab-content">
+  <p style="font-size:0.62rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:32px;">Crear invitación personalizada para enviar</p>
+  <div class="inv-form">
+    <div class="form-group">
+      <label>Nombre del invitado</label>
+      <input type="text" id="inv-name" placeholder="Ej: María González" oninput="updatePreview()">
+    </div>
+    <div class="form-group">
+      <label>Mensaje personalizado</label>
+      <textarea id="inv-custom" placeholder="Escribe algo especial para este invitado..." oninput="updatePreview()">Con todo mi amor te invito a celebrar este momento tan especial en mi vida. Tu presencia hará esta noche aún más mágica.</textarea>
+    </div>
+    <div class="form-group">
+      <label>URL de la página (para incluir en el texto)</label>
+      <input type="text" id="inv-url" placeholder="https://tuusuario.github.io/xv-angie" oninput="updatePreview()">
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <button class="btn" onclick="updatePreview()">✦ Actualizar vista previa</button>
+      <button class="btn btn-success" onclick="copyInvitation()">⎘ Copiar texto</button>
+      <button class="btn" onclick="generateFromGuest()">Cargar desde invitado</button>
+    </div>
+
+    <!-- TEXT OUTPUT -->
+    <textarea id="inv-text-output" readonly placeholder="El texto de la invitación aparecerá aquí..."></textarea>
+  </div>
+
+  <!-- VISUAL PREVIEW -->
+  <div id="inv-preview" style="margin-top:48px;">
+    <p class="inv-eyebrow">✦ Invitación Especial ✦</p>
+    <p class="inv-dear">Con mucho cariño, para:</p>
+    <div class="inv-guest-name" id="prev-name">Nombre del Invitado</div>
+    <div class="inv-divider"><span></span>💎<span></span></div>
+    <p class="inv-body" id="prev-body">
+      Con todo mi amor te invito a celebrar este momento tan especial en mi vida.
+      Tu presencia hará esta noche aún más mágica.
+    </p>
+    <div class="inv-details">
+      <div class="inv-detail-item">
+        <div class="inv-detail-label">Fecha</div>
+        <div class="inv-detail-val">18 de Julio, 2026</div>
+      </div>
+      <div class="inv-detail-item">
+        <div class="inv-detail-label">Hora</div>
+        <div class="inv-detail-val">7:00 PM</div>
+      </div>
+      <div class="inv-detail-item">
+        <div class="inv-detail-label">Evento</div>
+        <div class="inv-detail-val">XV Años</div>
+      </div>
+    </div>
+    <p class="inv-footer">Por favor confirma tu asistencia</p>
+    <p class="inv-url" id="prev-url"></p>
+    <div class="inv-sig">Angie Valentina ✨</div>
+  </div>
+</div>
+
+<!-- TAB: EXPORT -->
+<div id="tab-export" class="tab-content">
+  <p style="font-size:0.62rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:32px;">Exportar y gestionar datos</p>
+  <div style="display:flex;flex-direction:column;gap:16px;max-width:400px;">
+    <button class="btn btn-success" onclick="exportCSV()">⬇ Descargar lista en CSV</button>
+    <button class="btn" onclick="exportJSON()">⬇ Descargar datos en JSON</button>
+    <button class="btn" onclick="importJSON()">⬆ Importar datos JSON</button>
+    <input type="file" id="json-import" accept=".json" style="display:none" onchange="loadJSON(event)">
+    <hr style="border-color:rgba(201,169,110,0.1);margin:8px 0;">
+    <button class="btn btn-danger" onclick="clearAllGuests()">🗑 Borrar todos los invitados</button>
+  </div>
+  <div id="export-stats" style="margin-top:48px;"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── DATA ────────────────────────────────────────────
+function getGuests() { return JSON.parse(localStorage.getItem('xv_guests') || '[]'); }
+function saveGuests(g) { localStorage.setItem('xv_guests', JSON.stringify(g)); }
+
+// ── TABS ────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    const tabs = ['dashboard','guests','generator','export'];
+    b.classList.toggle('active', tabs[i] === name);
+  });
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.getElementById(`tab-${name}`).classList.add('active');
+  if (name === 'dashboard') renderDashboard();
+  if (name === 'guests') renderGuests();
+  if (name === 'export') renderExportStats();
+}
+
+// ── DASHBOARD ───────────────────────────────────────
+function renderDashboard() {
+  const guests = getGuests();
+  const confirmed = guests.filter(g => g.confirm === 'yes');
+  const maybe     = guests.filter(g => g.confirm === 'maybe');
+  const declined  = guests.filter(g => g.confirm === 'no');
+  const totalPeople = guests.reduce((a, g) => a + parseInt(g.guests || 1), 0);
+
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card"><div class="stat-num">${guests.length}</div><div class="stat-label">Total Registrados</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#66bb6a">${confirmed.length}</div><div class="stat-label">Confirmados</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#ffb74d">${maybe.length}</div><div class="stat-label">Tal vez</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#ef5350">${declined.length}</div><div class="stat-label">Declinaron</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--sky)">${totalPeople}</div><div class="stat-label">Total Asistentes</div></div>
+  `;
+
+  const recent = [...guests].reverse().slice(0, 8);
+  document.getElementById('recent-body').innerHTML = recent.map(g => `
+    <tr>
+      <td><strong style="color:var(--pearl)">${esc(g.name)}</strong></td>
+      <td style="opacity:.6">${esc(g.email)}</td>
+      <td style="text-align:center">${g.guests}</td>
+      <td>${badge(g.confirm)}</td>
+      <td style="opacity:.4;font-size:.72rem">${fmtDate(g.timestamp)}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="5" style="text-align:center;opacity:.3;padding:40px">Sin registros aún</td></tr>';
+}
+
+// ── GUESTS TABLE ─────────────────────────────────────
+function renderGuests(filter = '') {
+  const guests = getGuests().filter(g =>
+    !filter || g.name.toLowerCase().includes(filter) || g.email.toLowerCase().includes(filter)
+  );
+  const tbody = document.getElementById('guests-body');
+  document.getElementById('no-guests').style.display = guests.length ? 'none' : 'block';
+
+  tbody.innerHTML = guests.reverse().map(g => `
+    <tr>
+      <td><strong style="color:var(--pearl)">${esc(g.name)}</strong></td>
+      <td style="opacity:.6">${esc(g.phone||'—')}</td>
+      <td style="opacity:.6">${esc(g.email)}</td>
+      <td style="text-align:center">${g.guests}</td>
+      <td>${badge(g.confirm)}</td>
+      <td style="opacity:.5;font-size:.72rem;max-width:160px;overflow:hidden;text-overflow:ellipsis">${esc(g.message||'—')}</td>
+      <td style="white-space:nowrap">
+        <button class="btn" style="padding:6px 14px;font-size:.58rem" onclick="loadInvite(${g.id})">✉</button>
+        <button class="btn btn-danger" style="padding:6px 14px;font-size:.58rem;margin-left:6px" onclick="deleteGuest(${g.id})">✕</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filterGuests() {
+  renderGuests(document.getElementById('search-input').value.toLowerCase());
+}
+
+function deleteGuest(id) {
+  if (!confirm('¿Eliminar este invitado?')) return;
+  saveGuests(getGuests().filter(g => g.id !== id));
+  renderGuests();
+  toast('Invitado eliminado');
+}
+
+function clearAllGuests() {
+  if (!confirm('¿Borrar TODOS los invitados? Esta acción no se puede deshacer.')) return;
+  localStorage.removeItem('xv_guests');
+  renderGuests(); renderDashboard();
+  toast('Lista limpiada');
+}
+
+// ── INVITATION GENERATOR ────────────────────────────
+function updatePreview() {
+  const name = document.getElementById('inv-name').value || 'Nombre del Invitado';
+  const body = document.getElementById('inv-custom').value;
+  const url  = document.getElementById('inv-url').value;
+
+  document.getElementById('prev-name').textContent = name;
+  document.getElementById('prev-body').textContent = body;
+  const urlEl = document.getElementById('prev-url');
+  if (url) { urlEl.textContent = '🔗 ' + url; urlEl.style.display = 'block'; }
+  else { urlEl.style.display = 'none'; }
+
+  // Generate text version
+  const urlLine = url ? `\n\n🔗 Confirma tu asistencia aquí: ${url}` : '';
+  const text = `✨ INVITACIÓN ESPECIAL ✨\n\n` +
+    `Estimad@ ${name},\n\n` +
+    `${body}\n\n` +
+    `📅 Fecha: Sábado, 18 de Julio de 2026\n` +
+    `⏰ Hora: 7:00 PM\n` +
+    `👑 Evento: XV Años de Angie Valentina\n` +
+    `💎 Código de vestimenta: Etiqueta Formal — Tonos Azul & Dorado` +
+    urlLine +
+    `\n\n— Con todo mi amor, Angie Valentina ✨\n\n` +
+    `Por favor confirma tu asistencia antes del 10 de julio 💙`;
+
+  document.getElementById('inv-text-output').value = text;
+}
+
+function copyInvitation() {
+  const ta = document.getElementById('inv-text-output');
+  if (!ta.value) { toast('Genera la invitación primero'); return; }
+  navigator.clipboard.writeText(ta.value).then(() => toast('¡Texto copiado!'));
+}
+
+function loadInvite(id) {
+  const g = getGuests().find(x => x.id === id);
+  if (!g) return;
+  switchTab('generator');
+  document.getElementById('inv-name').value = g.name;
+  document.getElementById('inv-custom').value = g.message
+    ? `Con mucho cariño te invito a celebrar mis XV años. ${g.message}`
+    : 'Con todo mi amor te invito a celebrar este momento tan especial en mi vida. Tu presencia hará esta noche aún más mágica.';
+  updatePreview();
+}
+
+function generateFromGuest() {
+  const guests = getGuests();
+  if (!guests.length) { toast('No hay invitados registrados'); return; }
+  const name = prompt('Nombre del invitado a cargar:\n' + guests.map(g=>g.name).join('\n'));
+  const found = guests.find(g => g.name.toLowerCase() === name?.toLowerCase());
+  if (found) loadInvite(found.id);
+  else toast('Invitado no encontrado');
+}
+
+// ── EXPORT ───────────────────────────────────────────
+function exportCSV() {
+  const guests = getGuests();
+  if (!guests.length) { toast('Sin datos para exportar'); return; }
+  const headers = ['Nombre','Teléfono','Email','Personas','Estado','Mensaje','Fecha'];
+  const rows = guests.map(g => [
+    g.name, g.phone||'', g.email, g.guests,
+    {yes:'Confirmado',maybe:'Tal vez',no:'Declinó'}[g.confirm]||'',
+    (g.message||'').replace(/,/g,''), fmtDate(g.timestamp)
+  ]);
+  const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+  download('invitados_xv_angie.csv', 'text/csv', csv);
+  toast('CSV descargado');
+}
+
+function exportJSON() {
+  const guests = getGuests();
+  download('invitados_xv_angie.json', 'application/json', JSON.stringify(guests, null, 2));
+  toast('JSON descargado');
+}
+
+function importJSON() { document.getElementById('json-import').click(); }
+function loadJSON(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!Array.isArray(data)) throw new Error();
+      const existing = getGuests();
+      const merged = [...existing, ...data.filter(d => !existing.find(e => e.id === d.id))];
+      saveGuests(merged);
+      toast(`${data.length} registros importados`);
+      renderDashboard();
+    } catch { toast('Error al importar el archivo'); }
+  };
+  reader.readAsText(file);
+}
+
+function renderExportStats() {
+  const guests = getGuests();
+  document.getElementById('export-stats').innerHTML = guests.length
+    ? `<p style="opacity:.4;font-size:.75rem">Total de registros: <strong style="color:var(--gold-light)">${guests.length}</strong> invitados</p>`
+    : `<p style="opacity:.3;font-size:.75rem">No hay datos registrados aún.</p>`;
+}
+
+function download(filename, mime, content) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], { type: mime }));
+  a.download = filename;
+  a.click();
+}
+
+// ── HELPERS ──────────────────────────────────────────
+function esc(s) { return (s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtDate(ts) {
+  if (!ts) return '—';
+  return new Date(ts).toLocaleDateString('es-CO', { day:'2-digit', month:'short', year:'numeric' });
+}
+function badge(confirm) {
+  const map = { yes: ['badge-yes','Confirmado'], maybe: ['badge-maybe','Tal vez'], no: ['badge-no','Declinó'] };
+  const [cls, txt] = map[confirm] || ['','—'];
+  return `<span class="badge ${cls}">${txt}</span>`;
+}
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// INIT
+renderDashboard();
+updatePreview();
+</script>
+</body>
+</html>
