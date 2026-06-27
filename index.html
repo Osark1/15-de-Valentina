@@ -648,53 +648,11 @@
           9:00 PM — Cena · Música · Baile
         </div>
       </div>
-      <div class="detail-card reveal">
-        <span class="detail-icon">🎁</span>
-        <div class="detail-title">Mesa de Regalos</div>
-        <div class="detail-text">
-          Tu presencia es nuestro mejor regalo.<br>
-          Mesa disponible próximamente<br>
-          <strong>Con mucho amor 💛</strong>
-        </div>
-      </div>
     </div>
   </div>
 </section>
 
-<!-- DRESS CODE -->
-<section id="dresscode">
-  <div class="section-container">
-    <p class="section-eyebrow reveal">Viste para la magia</p>
-    <h2 class="section-title reveal">Código de <em>Vestimenta</em></h2>
-    <span class="gold-line reveal"></span>
-    <div class="dress-palette reveal">
-      <div class="swatch-group">
-        <div class="swatch" style="background:#1a237e;"></div>
-        <div class="swatch-label">Azul Zafiro</div>
-      </div>
-      <div class="swatch-group">
-        <div class="swatch" style="background:#0d47a1;"></div>
-        <div class="swatch-label">Azul Royal</div>
-      </div>
-      <div class="swatch-group">
-        <div class="swatch" style="background:#c9a96e;"></div>
-        <div class="swatch-label">Dorado</div>
-      </div>
-      <div class="swatch-group">
-        <div class="swatch" style="background:#1b1b3a;"></div>
-        <div class="swatch-label">Azul Noche</div>
-      </div>
-      <div class="swatch-group">
-        <div class="swatch" style="background:#f0f4ff; border-color:rgba(201,169,110,0.3);"></div>
-        <div class="swatch-label">Perla</div>
-      </div>
-    </div>
-    <p class="dress-note reveal">
-      Etiqueta formal · Por favor evitar vestidos de color blanco y negro<br>
-      <em style="opacity:0.6;font-size:0.9em;">¡Luzcan espectaculares esta noche especial!</em>
-    </p>
-  </div>
-</section>
+
 
 <!-- RSVP -->
 <section id="rsvp">
@@ -949,7 +907,6 @@ function submitRSVP() {
   const message = document.getElementById('r-message').value.trim();
 
   if (!name) { showToast('Por favor ingresa tu nombre'); return; }
-  if (!email) { showToast('Por favor ingresa tu correo'); return; }
 
   const guests_list = JSON.parse(localStorage.getItem('xv_guests') || '[]');
   const entry = {
