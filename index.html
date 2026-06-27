@@ -284,32 +284,6 @@
     .detail-text { font-size: 0.8rem; opacity: 0.65; line-height: 1.8; letter-spacing: 1px; }
     .detail-text strong { color: var(--pearl); opacity: 1; font-weight: 400; display: block; font-size: 0.95rem; margin-top: 4px; }
 
-    /* ── CÓDIGO DE VESTIMENTA ── */
-    #dresscode {
-      background: var(--midnight);
-      text-align: center;
-    }
-    .dress-palette {
-      display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
-      margin: 50px auto;
-    }
-    .swatch-group { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-    .swatch {
-      width: 70px; height: 70px; border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.1);
-      position: relative; transition: transform 0.3s;
-      cursor: default;
-    }
-    .swatch:hover { transform: scale(1.1); }
-    .swatch-label { font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.5; }
-    .dress-note {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.1rem; font-style: italic;
-      color: var(--gold-light); opacity: 0.8;
-      max-width: 500px; margin: 0 auto;
-      line-height: 2;
-    }
-
     /* ── RSVP ── */
     #rsvp {
       background: linear-gradient(180deg, var(--midnight) 0%, var(--deep) 50%, var(--midnight) 100%);
@@ -911,14 +885,14 @@ function submitRSVP() {
   const guests_list = JSON.parse(localStorage.getItem('xv_guests') || '[]');
   const entry = {
     id: Date.now(),
-    name, phone, email, guests, confirm, message,
+    name, phone, guests, confirm, message,
     timestamp: new Date().toISOString()
   };
   guests_list.push(entry);
   localStorage.setItem('xv_guests', JSON.stringify(guests_list));
 
   // Clear form
-  ['r-name','r-phone','r-email','r-message'].forEach(id => document.getElementById(id).value = '');
+  ['r-name','r-phone','r-message'].forEach(id => document.getElementById(id).value = '');
 
   document.getElementById('success-modal').classList.add('open');
 }
