@@ -714,9 +714,6 @@
           <input type="tel" id="r-phone" placeholder="+57 300 000 0000">
         </div>
       </div>
-      <div class="form-group">
-        <label>✦ Correo electrónico</label>
-        <input type="email" id="r-email" placeholder="tu@correo.com">
       </div>
       <div class="form-row">
         <div class="form-group">
@@ -726,14 +723,12 @@
             <option value="2">Vendremos 2</option>
             <option value="3">Somos 3</option>
             <option value="4">Somos 4</option>
-            <option value="5">Somos 5 o más</option>
           </select>
         </div>
         <div class="form-group">
           <label>✦ ¿Asistirás?</label>
           <select id="r-confirm">
             <option value="yes">¡Con mucho gusto!</option>
-            <option value="maybe">Lo intentaré</option>
             <option value="no">No podré asistir</option>
           </select>
         </div>
@@ -950,7 +945,6 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
 function submitRSVP() {
   const name    = document.getElementById('r-name').value.trim();
   const phone   = document.getElementById('r-phone').value.trim();
-  const email   = document.getElementById('r-email').value.trim();
   const guests  = document.getElementById('r-guests').value;
   const confirm = document.getElementById('r-confirm').value;
   const message = document.getElementById('r-message').value.trim();
